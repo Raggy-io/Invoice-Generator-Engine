@@ -1,72 +1,84 @@
 # 🧾 Standalone Invoice Generator Engine
 
 <div align="center">
-  <p><strong>A premium, GST-compliant, A4 PDF invoice generator designed for Curated by Banjaras.</strong></p>
+  <p><strong>A premium, GST-compliant, A4 PDF invoice generator.</strong></p>
   <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
-  <img src="https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E" alt="Vite" />
-  <img src="https://img.shields.io/badge/jsPDF-FF0000?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="jsPDF" />
+  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=FastAPI&logoColor=white" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
 </div>
 
 <br />
 
-This engine provides a robust, standalone solution for dynamically generating premium PDF invoices directly in the browser using `jspdf` and `jspdf-autotable`. Originally built for the **Curated by Banjaras** platform, it has been extracted into this repository for independent development and integration.
+This engine provides a robust, standalone solution for dynamically generating premium PDF invoices. It features a **React** frontend for an excellent user experience and a **FastAPI** backend that handles robust PDF generation using `reportlab`.
 
 ---
 
-## ✨ Key Features
+## ✨ Phase 1 - Polish Highlights
 
-- 🇮🇳 **GST-Compliant:** Automatically handles intra-state (CGST + SGST) vs inter-state (IGST) calculations based on customer and seller state.
-- 🔍 **HSN Code Support:** Lookups easily configurable in `src/lib/hsnConfig.js`.
-- 🧮 **Dynamic Calculation:** Automatically reverse-calculates the pre-tax value from GST-inclusive prices seamlessly.
-- 📝 **Indian Number System:** Includes an amount-in-words generator specific to the Indian numbering system (Lakhs, Crores, Rupees, Paise).
-- 🎨 **Premium Aesthetics:** Features custom typography styling (using Times-Roman to mimic Cormorant Garamond), beautiful brand colours (Terracotta, Linen, Gold, Espresso), and clean tabular layouts.
+- 🎨 **Dark Mode & Premium UI:** Seamlessly switch between light and dark themes honoring the brand colors.
+- 👁️ **Invoice Preview:** Preview the generated PDF invoice directly in the browser using a modal overlay before downloading.
+- 🖼️ **Company Logo & Signature Uploads:** Personalize invoices by uploading base64 encoded logos and authorized signatures on the fly.
+- 🚀 **Performance & UX:** Includes loading spinners, smooth toast notifications, and strict form validation.
+- 🐳 **Docker Ready:** Spin up the entire stack with a single `docker-compose` command.
+- 🧪 **Comprehensive Testing:** Frontend unit tests using `Vitest` and Backend API testing using `pytest`.
+- 📱 **Mobile Responsive:** Fluid layout that looks great on both desktop and mobile devices.
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started Locally
 
-Follow these steps to get the invoice engine running locally on your machine.
+You can run the application either using Docker or natively on your machine.
 
-### 1. Install Dependencies
+### Option A: Using Docker (Recommended)
+
+1. Make sure Docker and Docker Compose are installed.
+2. Run the stack:
+   ```bash
+   docker-compose up --build
+   ```
+3. Open your browser to `http://localhost:8080` to access the application.
+
+### Option B: Native Setup
+
+#### 1. Backend (FastAPI)
 ```bash
-npm install
+cd backend
+python -m venv venv
+# Windows: venv\Scripts\activate | Mac/Linux: source venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --reload
 ```
+The backend will run on `http://localhost:8000`.
 
-### 2. Run the Development Server
+#### 2. Frontend (React + Vite)
 ```bash
+# In the root directory
+npm install
 npm run dev
 ```
+The frontend will run on `http://localhost:5173`. Ensure it can talk to the backend by checking the `.env` file (`VITE_API_URL=http://localhost:8000`).
 
 ---
 
-## 💻 Usage in Your App
+## 🧪 Testing
 
-The core logic resides in `src/lib/generateInvoicePDF.js`. You can import it and pass an order object to generate the invoice on the fly.
+### Frontend Tests (Vitest)
+```bash
+npm run test
+```
 
-```javascript
-import { generateInvoicePDF } from './lib/generateInvoicePDF';
-
-// Example order object (See App.jsx for expected schema)
-const order = { ... }; 
-
-// Optional HSN lookup map
-const hsnMap = { "123": "46021990" }; 
-
-// Generate and download the PDF!
-generateInvoicePDF(order, hsnMap);
+### Backend Tests (Pytest)
+```bash
+cd backend
+pytest
 ```
 
 ---
 
-## ⚙️ Configuration
+## 📸 Screenshots
 
-Customizing the invoice generator for different sellers or updating tax rates is straightforward:
-
-- **Seller Details:** To change the seller details (address, GSTIN, name), simply edit the `SELLER` constant at the top of `src/lib/generateInvoicePDF.js`.
-- **HSN Codes & Taxes:** To add new HSN codes and their respective GST rates, edit the `HSN_TAX_RATES` object located in `src/lib/hsnConfig.js`.
-
----
+*(Add screenshots of the light mode, dark mode, and the preview modal here)*
 
 <div align="center">
-  <sub>Built with ❤️ for Curated by Banjaras</sub>
+  <sub>Built with ❤️</sub>
 </div>

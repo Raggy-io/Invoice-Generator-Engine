@@ -34,3 +34,5 @@ class Order(BaseModel):
     wallet_used_amount: float = 0.0
     coupon_discount_amount: float = 0.0
     coupon_code_used: Optional[str] = ""
+    company_logo: Optional[str] = None
+    signature: Optional[str] = None

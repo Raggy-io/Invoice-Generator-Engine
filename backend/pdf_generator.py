@@ -18,12 +18,12 @@ cocoa = Color(74/255, 52/255, 43/255)
 white = Color(1, 1, 1)
 
 SELLER = {
-    'name': 'Curated by Banjaras',
-    'addr1': 'Basement, D-229, Sector-55',
-    'addr2': 'Noida, Gautambuddha Nagar',
-    'statePin': 'Uttar Pradesh - 201301',
-    'gstin': '09LZFPS4192C1ZV',
-    'state': 'uttar pradesh',
+    'name': 'Your Company Name',
+    'addr1': '123 Business Road',
+    'addr2': 'Tech Park, City',
+    'statePin': 'State - 100001',
+    'gstin': '00XXXXX0000X0Z0',
+    'state': 'state name',
 }
 
 def number_to_words(amount: float) -> str:
@@ -47,15 +47,29 @@ def generate_invoice_pdf(order: Order) -> bytes:
     
     # Brand
     c.setFillColor(espresso)
+    
+    text_x = M
+    if order.company_logo:
+        try:
+            import base64
+            from reportlab.lib.utils import ImageReader
+            logo_data = base64.b64decode(order.company_logo)
+            logo_img = ImageReader(io.BytesIO(logo_data))
+            c.drawImage(logo_img, M, height - 42*mm, width=35*mm, height=35*mm, preserveAspectRatio=True, anchor='nw')
+            text_x = M + 40*mm
+        except Exception as e:
+            print("Logo error:", e)
+            pass
+
     c.setFont("Times-Roman", 28)
-    c.drawString(M, height - 17*mm, "CURATED")
+    c.drawString(text_x, height - 17*mm, "YOUR")
     c.setFont("Times-Roman", 9.5)
-    c.drawString(M, height - 23*mm, "BY BANJARAS")
+    c.drawString(text_x, height - 23*mm, "COMPANY")
     
     c.setFont("Helvetica", 7)
-    c.drawString(M, height - 31.5*mm, SELLER['addr1'])
-    c.drawString(M, height - 36*mm, SELLER['addr2'] + ', ' + SELLER['statePin'])
-    c.drawString(M, height - 40.5*mm, 'GSTIN: ' + SELLER['gstin'])
+    c.drawString(text_x, height - 31.5*mm, SELLER['addr1'])
+    c.drawString(text_x, height - 36*mm, SELLER['addr2'] + ', ' + SELLER['statePin'])
+    c.drawString(text_x, height - 40.5*mm, 'GSTIN: ' + SELLER['gstin'])
     
     # Right Meta
     c.setFillColor(terracotta)
@@ -106,7 +120,7 @@ def generate_invoice_pdf(order: Order) -> bytes:
         c.drawString(M, y, f"Phone: {order.delivery_address.mobile}")
     c.drawString(width/2 + 2*mm, y, f"Payment:   {order.payment_method}")
 
-    # --- ALGORITHM: TAX CALCULATION (DSA rules aspect) ---
+    # --- TAX CALCULATION ---
     cust_state = (order.delivery_address.state or "").strip().lower()
     is_intra_state = (cust_state == SELLER['state'])
     
@@ -163,6 +177,21 @@ def generate_invoice_pdf(order: Order) -> bytes:
     t.wrapOn(c, width, height)
     t.drawOn(c, M, y - 40*mm - len(order.items)*10*mm) # simplified positioning
     
+    # Signature
+    if order.signature:
+        try:
+            import base64
+            from reportlab.lib.utils import ImageReader
+            sig_data = base64.b64decode(order.signature)
+            sig_img = ImageReader(io.BytesIO(sig_data))
+            c.drawImage(sig_img, width - M - 40*mm, 20*mm, width=40*mm, height=25*mm, preserveAspectRatio=True, anchor='se')
+            c.setFillColor(espresso)
+            c.setFont("Helvetica", 8)
+            c.drawRightString(width - M, 15*mm, "Authorized Signatory")
+        except Exception as e:
+            print("Signature error:", e)
+            pass
+
     c.showPage()
     c.save()
     pdf_bytes = buffer.getvalue()

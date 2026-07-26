@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from models import Order
-from dsa_algorithms import product_trie
+from autocomplete import product_trie
 from pdf_generator import generate_invoice_pdf
 
 app = FastAPI(title="Invoice Generator Engine API")
@@ -19,7 +19,7 @@ app.add_middleware(
 @app.get("/api/autocomplete")
 def autocomplete_product(query: str):
     """
-    Demonstrates DSA: Uses a Trie (Prefix Tree) to find product suggestions in O(L) time.
+    Returns product suggestions based on search query.
     """
     suggestions = product_trie.search_prefix(query, limit=5)
     return {"query": query, "results": [res["data"] for res in suggestions]}
