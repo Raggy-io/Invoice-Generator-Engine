@@ -73,12 +73,6 @@ cd backend
 pytest
 ```
 
----
-
-## 📸 Screenshots
-
-*(Add screenshots of the light mode, dark mode, and the preview modal here)*
-
 <div align="center">
   <sub>Built with ❤️</sub>
 </div>
